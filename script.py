@@ -2,6 +2,7 @@ import requests
 import json
 from enum import StrEnum
 from tabulate import tabulate
+from datetime import date
 
 COST_REDUCTION = 0.0
 
@@ -51,7 +52,8 @@ class MaterialCosts:
         self.superior = superior
 
     def printCostReport(self):
-        headers = ['Mat', 'Crafting Cost', 'Market Value', 'Craft Adv']
+        print(date.today().strftime('%B %d, %Y'))
+        headers = ['Mat', 'Crafting Cost', 'Market Value', 'Craft Adv', 'Sell Adv (-5% Tax)']
         superiorData = [
             ['Relic', *self._getRowData(self.superior.relic, self.superiorPrice) ],
             ['Fish', *self._getRowData(self.superior.fish, self.superiorPrice) ],
@@ -72,7 +74,11 @@ class MaterialCosts:
         craftingCost = costs.getPriceForCraft()
         marketValue = costs.quantityCrafted * fusionPrice
         craftingAdv = (marketValue - craftingCost) / marketValue
-        return [craftingCost, marketValue, f'{craftingAdv:.2%}']
+
+        sellingValue = marketValue * 0.95
+        sellingAdv = (sellingValue - craftingCost) / sellingValue
+
+        return [craftingCost, marketValue, f'{craftingAdv:.2%}', f'{sellingAdv:.2%}']
 
 
 itemList = [e.value for e in Item]
