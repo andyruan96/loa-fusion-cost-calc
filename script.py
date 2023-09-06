@@ -1,8 +1,12 @@
 import requests
 import json
+import os
 from enum import StrEnum
 from tabulate import tabulate
 from datetime import date
+from termcolor import colored
+
+os.system('color')
 
 COST_REDUCTION = 0.0
 
@@ -74,11 +78,13 @@ class MaterialCosts:
         craftingCost = costs.getPriceForCraft()
         marketValue = costs.quantityCrafted * fusionPrice
         craftingAdv = (marketValue - craftingCost) / marketValue
+        coloredCraftingAdv = colored(f'{craftingAdv:.2%}', 'green' if craftingAdv > 0 else 'red')
 
         sellingValue = marketValue * 0.95
         sellingAdv = (sellingValue - craftingCost) / sellingValue
+        coloredSellingAdv = colored(f'{sellingAdv:.2%}', 'green' if sellingAdv > 0 else 'red')
 
-        return [craftingCost, marketValue, f'{craftingAdv:.2%}', f'{sellingAdv:.2%}']
+        return [craftingCost, marketValue, coloredCraftingAdv, coloredSellingAdv]
 
 
 itemList = [e.value for e in Item]
